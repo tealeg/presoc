@@ -3,7 +3,8 @@
 (require sha)
 
 
-(define user-db-connection (sqlite3-connect #:database "./user.db" #:mode 'create))
+(define (connect!)
+  (sqlite3-connect #:database "./user.db" #:mode 'create))
 
 (define (make-user-table! conn)
   (start-transaction conn)
