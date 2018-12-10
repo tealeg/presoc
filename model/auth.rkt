@@ -6,6 +6,9 @@
 (define (connect!)
   (sqlite3-connect #:database "./user.db" #:mode 'create))
 
+(define (disconnect! conn)
+  (disconnect conn))
+
 (define (make-user-table! conn)
   (start-transaction conn)
   (query-exec conn "CREATE TABLE IF NOT EXISTS user (username VARCHAR PRIMARY KEY, hashed_password VARCHAR, session_id VARCHAR, session_date INTEGER)")
@@ -47,5 +50,5 @@
         ;; auth failed
         #f)))
 
-(provide make-user-table! add-user! auth-user?) 
+(provide connect! disconnect! make-user-table! add-user! auth-user?) 
 
