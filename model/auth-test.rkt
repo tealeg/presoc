@@ -5,10 +5,14 @@
          sha
          "auth.rkt")
 (require rackunit/text-ui)
+
 (require/expose "auth.rkt" (session-expired?))
 
 (define (make-test-connection)
   (sqlite3-connect #:database 'memory))
+
+(define (destroy-test-connection conn)
+  (disconnect conn))
 
 (define auth-tests
   (test-suite
@@ -22,6 +26,7 @@
      (check-not-false result "query returned zero rows")
      (check-equal? "tealeg" (vector-ref result 0))
      (check-equal? "hashed" (vector-ref result 1))
+     (disconnect test-connection)
      )
 
    (test-case "add-user! creates a user record"
@@ -32,6 +37,7 @@
      (check-not-false result "No user was created")
      (check-equal? "bob" (vector-ref result 0))
      (check-equal? (sha512 (string->bytes/utf-8 "unhashed")) (vector-ref result 1))
+     (disconnect test-connection)
      )
 
    (test-case "session-expired? returns #t when the session date is more than 20 minutes old"
@@ -44,8 +50,11 @@
      (add-user! test-connection "bob" "unhashed")
      (check-true (auth-user? test-connection "bob" "unhashed"))
      (check-false (auth-user? test-connection "dave" "unhashed"))
-     (check-false (auth-user? test-connection "bob" "somethingelse")))
-   ))
+     (check-false (auth-user? test-connection "bob" "somethingelse"))     
+     (disconnect test-connection))
+   )
+  )
 
  
-(run-tests auth-tests) 
+(run-tests auth-tests)
+
