@@ -4,6 +4,7 @@
  (prefix-in m:auth: "../model/auth.rkt"))
 
 
+
 (define (usage)
   (display "
 mkuser <user-name> <password>
@@ -22,3 +23,6 @@ mkuser <user-name> <password>
 (m:auth:add-user! user-conn user password)
 
 (m:auth:disconnect! user-conn)
+
+;; Don't include in test runs
+(module test racket/base)

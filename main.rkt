@@ -31,3 +31,6 @@
 
 (serve/servlet presoc-servlet
                 #:servlet-regexp #rx"")
+
+;; Prevent this module running in tests
+(module test racket/base)
