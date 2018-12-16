@@ -20,7 +20,7 @@
      (m:auth:auth-user? conn
                         (bytes->string/utf-8 user)
                         (bytes->string/utf-8 pass))]
-    [else #f]))
+    [else (cons #f #f)]))
 
 
 (provide authenticated? req->user)

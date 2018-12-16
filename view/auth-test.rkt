@@ -7,7 +7,7 @@
          net/base64
          racket/promise
          "auth.rkt"
-         (prefix-in m:auth: "../model/auth.rkt")
+         (prefix-in m:persist: "../model/persist.rkt")
          )
 
 (require/expose "auth.rkt" (authenticated?))
@@ -34,18 +34,18 @@
 
 (define auth-tests
   (test-suite "Tests for view/auth.rkt"
-
               (test-case "authenticated?"
-)
+
                 
-              (let ([test-connection (make-test-connection)]
-                    [request (make-test-request #"GET" "/" '() #"bob" #"bobbit")])
-                (m:auth:make-user-table! test-connection)
-                (m:auth:add-user! test-connection "bob" "bobbit")
-                (check-true (authenticated? test-connection request))
-                ;; build a request and test it
-                
-                (destroy-test-connection test-connection))))
+                (let ([test-connection (make-test-connection)]
+                      [request (make-test-request #"GET" "/" '() #"bob" #"bobbit")])
+                  (m:persist:make-user-table! test-connection)
+                  (m:persist:add-user! test-connection "bob" "bobbit")
+                  (let ([result (authenticated? test-connection request)])
+                    (check-true (car result))
+                    (check-false (cdr result)))
+                  
+                  (destroy-test-connection test-connection)))))
 
 (run-tests auth-tests)
 

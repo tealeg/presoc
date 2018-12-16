@@ -2,7 +2,7 @@
 
 (require web-server/servlet
          web-server/servlet-env
-         (prefix-in m:auth: "./model/auth.rkt")
+         (prefix-in m:persist: "./model/persist.rkt")
          (prefix-in v:auth: "./view/auth.rkt"))
 
 (define (make-presoc-servlet user-conn)
@@ -23,8 +23,8 @@
              (body
               (p "Hello, " ,(bytes->string/utf-8 (v:auth:req->user req)) "!"))))])))
 
-(define user-conn (m:auth:connect!))
-(m:auth:make-user-table! user-conn)
+(define user-conn (m:persist:connect!))
+(m:persist:make-user-table! user-conn)
 
 (define presoc-servlet (make-presoc-servlet user-conn))
 
